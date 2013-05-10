@@ -17,6 +17,7 @@ namespace fs = boost::filesystem;
 class Dir_Parse {
 	private:
 		fs::path root;
+		size_t cut_path;
 
 	public:
 		// Constructors.

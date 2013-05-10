@@ -63,7 +63,7 @@ void Dir_Parse::iterate(fs::path dir) {
 	fs::directory_iterator end_iter;
 	vector<fs::path> dirs;
 
-	cout << endl << "==== " << dir.relative_path() << " ===="  << endl;
+	cout << endl << "==== " << string(dir.relative_path().c_str()).substr(cut_path) << " ===="  << endl;
 
 	for (fs::directory_iterator dir_itr(dir); dir_itr != end_iter; ++dir_itr) {
 		try {
@@ -95,5 +95,7 @@ void Dir_Parse::iterate(fs::path dir) {
  * Iterate over the root directory.
  */
 void Dir_Parse::iterate() {
+	// Set the root path length to remove from the others to get just the tags.
+	cut_path = string(root.relative_path().c_str()).length();
 	iterate(root);
 }
