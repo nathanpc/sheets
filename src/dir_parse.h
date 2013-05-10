@@ -16,10 +16,10 @@ namespace fs = boost::filesystem;
 
 class Dir_Parse {
 	private:
-		//
+		fs::path root;
 
 	public:
-		Dir_Parse();
+		Dir_Parse(const char *dir);
 };
 
 #endif
