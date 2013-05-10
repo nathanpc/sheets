@@ -19,7 +19,16 @@ class Dir_Parse {
 		fs::path root;
 
 	public:
+		// Constructors.
+		Dir_Parse();
 		Dir_Parse(const char *dir);
+
+		// Setters.
+		void set_root(const char *dir);
+
+		// Others.
+		void iterate(fs::path dir);
+		void iterate();
 };
 
 #endif

@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include <cstdlib>
 #include <boost/filesystem.hpp>
 
@@ -16,6 +17,17 @@ using namespace std;
 namespace fs = boost::filesystem;
 
 
+/**
+ * Empty constructor.
+ */
+Dir_Parse::Dir_Parse() {
+}
+
+/**
+ * Default constructor.
+ *
+ * @param dir Root directory.
+ */
 Dir_Parse::Dir_Parse(const char *dir) {
 	root = fs::path(dir);
 
@@ -31,4 +43,57 @@ Dir_Parse::Dir_Parse(const char *dir) {
 		cout << "You should point me to a directory, not a file." << endl;
 		exit(EXIT_FAILURE);
 	}
+}
+
+/**
+ * Sets the root directory.
+ *
+ * @param dir Root directory.
+ */
+void Dir_Parse::set_root(const char *dir) {
+	root =  fs::path(dir);
+}
+
+/**
+ * Iterate over a directory.
+ *
+ * @param dir Directory to iterate over.
+ */
+void Dir_Parse::iterate(fs::path dir) {
+	fs::directory_iterator end_iter;
+	vector<fs::path> dirs;
+
+	cout << endl << "==== " << dir.relative_path() << " ===="  << endl;
+
+	for (fs::directory_iterator dir_itr(dir); dir_itr != end_iter; ++dir_itr) {
+		try {
+			// Ignore hidden directories.
+			if (dir_itr->path().filename().c_str()[0] != '.') {
+				if (fs::is_directory(dir_itr->status())) {
+					// Directory
+					cout << dir_itr->path().filename() << " - Directory" << endl;
+					dirs.push_back(dir_itr->path());
+				} else if (fs::is_regular_file(dir_itr->status())) {
+					// File
+					cout << dir_itr->path().filename() << " - File" << endl;
+				} else {
+					// Other
+					cout << dir_itr->path().filename() << ": WTF is this?!" << endl;
+				}
+			}
+		} catch (const exception &e) {
+			cout << dir_itr->path().filename() << ": " << e.what() << endl;
+		}
+	}
+
+	for (size_t i = 0; i < dirs.size(); ++i) {
+		iterate(dirs[i]);
+	}
+}
+
+/**
+ * Iterate over the root directory.
+ */
+void Dir_Parse::iterate() {
+	iterate(root);
 }
