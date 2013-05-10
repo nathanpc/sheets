@@ -9,6 +9,7 @@
 #define SHEETS_DIR_PARSE_H_
 
 #include <string>
+#include <vector>
 #include <boost/filesystem.hpp>
 
 namespace fs = boost::filesystem;
@@ -20,16 +21,20 @@ class Dir_Parse {
 		size_t cut_path;
 
 	public:
-		// Constructors.
+		// Constructors
 		Dir_Parse();
 		Dir_Parse(const char *dir);
 
-		// Setters.
+		// Setters
 		void set_root(const char *dir);
 
-		// Others.
+		// Iteration
 		void iterate(fs::path dir);
 		void iterate();
+
+		// Parsing
+		std::vector<std::string> get_tags(const fs::path path);
+		const char* trim_path(const fs::path path);
 };
 
 #endif

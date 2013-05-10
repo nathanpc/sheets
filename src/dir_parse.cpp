@@ -9,7 +9,9 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
+
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "dir_parse.h"
 
@@ -80,8 +82,21 @@ void Dir_Parse::iterate(fs::path dir) {
 					dirs.push_back(dir_itr->path());
 				} else if (fs::is_regular_file(dir_itr->status())) {
 					// File
+					vector<string> tags = get_tags(dir_itr->path());
+
 					#ifdef DEBUG
+					cout << trim_path(dir_itr->path()) << endl;
 					cout << dir_itr->path().filename() << " - File" << endl;
+
+					for (size_t i = 0; i < tags.size(); ++i) {
+						cout << tags[i];
+
+						if (i < tags.size() - 1) {
+							cout << ", ";
+						} else {
+							cout << endl << endl;
+						}
+					}
 					#endif
 				}
 				#ifdef DEBUG
@@ -108,4 +123,33 @@ void Dir_Parse::iterate() {
 	// Set the root path length to remove from the others to get just the tags.
 	cut_path = string(root.relative_path().c_str()).length();
 	iterate(root);
+}
+
+/**
+ * Get the tags based on the directory structure.
+ *
+ * @param path Path to a file.
+ * @return A vector of tags.
+ */
+vector<string> Dir_Parse::get_tags(const fs::path path) {
+	vector<string> tags;
+	string str_path = trim_path(path);
+
+	// Remove everything we don't want.
+	boost::trim_if(str_path, boost::is_any_of("/"));
+	str_path = str_path.substr(0, str_path.find(path.extension().c_str()));
+
+	// Split and return.
+	boost::split(tags, str_path, boost::is_any_of("/"));
+	return tags;
+}
+
+/**
+ * Removes the absolute path and keeps just the relative (to root) path.
+ *
+ * @param path A path.
+ * @return Relative path.
+ */
+const char* Dir_Parse::trim_path(const fs::path path) {
+	return string(path.c_str()).substr(cut_path).c_str();
 }
