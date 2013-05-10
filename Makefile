@@ -10,7 +10,7 @@ sheets: $(OBJ)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
 debug: CXXFLAGS += -g3 -DDEBUG
-debug: leaf
+debug: all
 
 %.o: %.c
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $<

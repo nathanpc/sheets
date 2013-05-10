@@ -63,7 +63,9 @@ void Dir_Parse::iterate(fs::path dir) {
 	fs::directory_iterator end_iter;
 	vector<fs::path> dirs;
 
+	#ifdef DEBUG
 	cout << endl << "==== " << string(dir.relative_path().c_str()).substr(cut_path) << " ===="  << endl;
+	#endif
 
 	for (fs::directory_iterator dir_itr(dir); dir_itr != end_iter; ++dir_itr) {
 		try {
@@ -71,15 +73,23 @@ void Dir_Parse::iterate(fs::path dir) {
 			if (dir_itr->path().filename().c_str()[0] != '.') {
 				if (fs::is_directory(dir_itr->status())) {
 					// Directory
+					#ifdef DEBUG
 					cout << dir_itr->path().filename() << " - Directory" << endl;
+					#endif
+
 					dirs.push_back(dir_itr->path());
 				} else if (fs::is_regular_file(dir_itr->status())) {
 					// File
+					#ifdef DEBUG
 					cout << dir_itr->path().filename() << " - File" << endl;
-				} else {
+					#endif
+				}
+				#ifdef DEBUG
+				else {
 					// Other
 					cout << dir_itr->path().filename() << ": WTF is this?!" << endl;
 				}
+				#endif
 			}
 		} catch (const exception &e) {
 			cout << dir_itr->path().filename() << ": " << e.what() << endl;
