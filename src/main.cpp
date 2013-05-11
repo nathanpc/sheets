@@ -10,6 +10,7 @@
 #include <string>
 #include <cstring>
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "dir_parse.h"
 #include "db.h"
@@ -49,6 +50,46 @@ void index(const char *directory) {
 	cout << endl << BOLDBLUE << "Successfully indexed " << dir.datasheets.size() << " datasheets." << RESET << endl;
 }
 
+void search(const char *term) {
+	// Setup the database stuff.
+	DB db("datasheets.db");
+
+	// Search.
+	string qry = "SELECT path, tags FROM datasheets WHERE tags LIKE \"%" + string(term) + "%\"";
+	vector<vector<string> > results = db.query(qry.c_str());
+
+	// Set the color for the count message.
+	if (results.size() == 0) {
+		cout << BOLDRED;
+	} else {
+		cout << BOLDBLUE;
+	}
+
+	// Print the message.
+	cout << results.size() << RESET << " datasheets found." << endl;
+	if (results.size() > 0) {
+		cout << endl;
+	}
+
+	// List the results.
+	for (size_t i = 0; i < results.size(); ++i) {
+		vector<string> result = results[i];
+		vector<string> tags;
+
+		boost::split(tags, result[1], boost::is_any_of(","));
+
+		// TODO: Highlight the term (maybe in yellow?) in the results strings.
+
+		cout << BOLDWHITE << tags[tags.size() - 1] << RESET << endl;  // Part name.
+		cout << "  Location: " << result[0] << endl;
+		cout << "  Tags: " << boost::algorithm::join(tags, ", ") << endl;
+
+		if (i < results.size() - 1) {
+			cout << endl;
+		}
+	}
+}
+
 int main(int argc, char *argv[]) {
 	// TODO: Store the database inside the config dir at ~
 
@@ -69,7 +110,7 @@ int main(int argc, char *argv[]) {
 	if (strcmp(argv[1], "-i") == 0 || strcmp(argv[1], "index") == 0) {
 		index(argv[2]);
 	} else if (strcmp(argv[1], "-s") == 0 || strcmp(argv[1], "search") == 0) {
-		cout << "Search for: " << argv[2] << endl;
+		search(argv[2]);
 	} else {
 		usage();
 		return 1;
