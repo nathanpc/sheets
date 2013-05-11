@@ -67,9 +67,9 @@ int main(int argc, char *argv[]) {
 
 	// The usual argument parsing stuff.
 	if (strcmp(argv[1], "-i") == 0 || strcmp(argv[1], "index") == 0) {
-		index(argv[1]);
+		index(argv[2]);
 	} else if (strcmp(argv[1], "-s") == 0 || strcmp(argv[1], "search") == 0) {
-		cout << "Search for: " << argv[1] << endl;
+		cout << "Search for: " << argv[2] << endl;
 	} else {
 		usage();
 		return 1;
