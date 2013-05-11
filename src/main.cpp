@@ -50,6 +50,14 @@ void index(const char *directory) {
 	cout << endl << BOLDBLUE << "Successfully indexed " << dir.datasheets.size() << " datasheets." << RESET << endl;
 }
 
+string highlight_term(const string str, const char *term) {
+	string highlight = BOLDYELLOW;
+	highlight += term;
+	highlight += RESET;
+
+	return boost::algorithm::replace_all_copy(str, term, highlight);
+}
+
 void search(const char *term) {
 	// Setup the database stuff.
 	DB db("datasheets.db");
@@ -78,11 +86,9 @@ void search(const char *term) {
 
 		boost::split(tags, result[1], boost::is_any_of(","));
 
-		// TODO: Highlight the term (maybe in yellow?) in the results strings.
-
 		cout << BOLDWHITE << tags[tags.size() - 1] << RESET << endl;  // Part name.
-		cout << "  Location: " << result[0] << endl;
-		cout << "  Tags: " << boost::algorithm::join(tags, ", ") << endl;
+		cout << "  Location: " << highlight_term(result[0], term) << endl;
+		cout << "  Tags: " << highlight_term(boost::algorithm::join(tags, ", "), term) << endl;
 
 		if (i < results.size() - 1) {
 			cout << endl;
