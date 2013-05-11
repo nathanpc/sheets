@@ -1,7 +1,7 @@
 CXX = clang++
 CXXFLAGS = -Wall
-LDFLAGS = -pthread -lboost_filesystem -lboost_system
-OBJ = src/main.o src/dir_parse.o
+LDFLAGS = -pthread -lboost_filesystem -lboost_system -lsqlite3
+OBJ = src/main.o src/dir_parse.o src/db.o
 PREFIX = /usr/local
 
 all: sheets
