@@ -82,7 +82,13 @@ void Dir_Parse::iterate(fs::path dir) {
 					dirs.push_back(dir_itr->path());
 				} else if (fs::is_regular_file(dir_itr->status())) {
 					// File
+					vector<string> datasheet;
 					vector<string> tags = get_tags(dir_itr->path());
+
+					datasheet.push_back("/" + string(dir_itr->path().c_str()));  // TODO: Check if this assumption (adding the "/") is correct.
+					datasheet.push_back(boost::algorithm::join(tags, ","));
+
+					datasheets.push_back(datasheet);
 
 					#ifdef DEBUG
 					cout << trim_path(dir_itr->path()) << endl;
@@ -120,6 +126,9 @@ void Dir_Parse::iterate(fs::path dir) {
  * Iterate over the root directory.
  */
 void Dir_Parse::iterate() {
+	// Clear the datasheets vector.
+	datasheets.clear();
+
 	// Set the root path length to remove from the others to get just the tags.
 	cut_path = string(root.relative_path().c_str()).length();
 	iterate(root);

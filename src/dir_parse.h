@@ -21,6 +21,8 @@ class Dir_Parse {
 		size_t cut_path;
 
 	public:
+		std::vector<std::vector<std::string> > datasheets;
+
 		// Constructors
 		Dir_Parse();
 		Dir_Parse(const char *dir);
