@@ -37,6 +37,7 @@ class Dir_Parse {
 		// Parsing
 		std::vector<std::string> get_tags(const fs::path path);
 		const char* trim_path(const fs::path path);
+		const char* trim_path(const std::string path);
 };
 
 #endif

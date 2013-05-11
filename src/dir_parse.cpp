@@ -85,7 +85,7 @@ void Dir_Parse::iterate(fs::path dir) {
 					vector<string> datasheet;
 					vector<string> tags = get_tags(dir_itr->path());
 
-					datasheet.push_back("/" + string(dir_itr->path().c_str()));  // TODO: Check if this assumption (adding the "/") is correct.
+					datasheet.push_back(string(dir_itr->path().c_str()));
 					datasheet.push_back(boost::algorithm::join(tags, ","));
 
 					datasheets.push_back(datasheet);
@@ -161,4 +161,14 @@ vector<string> Dir_Parse::get_tags(const fs::path path) {
  */
 const char* Dir_Parse::trim_path(const fs::path path) {
 	return string(path.c_str()).substr(cut_path).c_str();
+}
+
+/**
+ * Removes the absolute path and keeps just the relative (to root) path.
+ *
+ * @param path A path.
+ * @return Relative path.
+ */
+const char* Dir_Parse::trim_path(const string path) {
+	return path.substr(cut_path).c_str();
 }
